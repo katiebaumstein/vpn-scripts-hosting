@@ -1,10 +1,10 @@
 # VPN Scripts Hosting
 
-A simple Node.js Express server for hosting VPN installation scripts. Users can install VPN servers using a single curl command.
+A simple Node.js Express server for hosting VPN installation scripts. Users can install VPN servers using a single command.
 
 ## Available Scripts
 
-- `hysteria2_debian12.sh` - Hysteria2 VPN server for Debian 12
+- `hysteria2_debian12.sh` - Hysteria2 VPN server for Debian 12 (interactive)
 - `snell_debian12.sh` - Snell proxy server for Debian 12
 - `vlessvr_debian12.sh` - VLESS+Reality protocol server for Debian 12
 
@@ -44,7 +44,11 @@ There are multiple ways to access the scripts:
 
 1. **Direct execution with curl/wget**: 
    ```bash
-   curl -fsSL https://your-domain.com/hysteria2_debian12.sh | sudo bash
+   # For non-interactive scripts (Snell, VLESS)
+   curl -fsSL https://your-domain.com/snell_debian12.sh | sudo bash
+   
+   # For interactive scripts (Hysteria2)
+   curl -fsSL https://your-domain.com/hysteria2_debian12.sh -o hysteria2_debian12.sh && sudo bash hysteria2_debian12.sh
    ```
    The server automatically serves the script as a downloadable file when requested with curl/wget.
 
@@ -60,6 +64,22 @@ There are multiple ways to access the scripts:
    ```
    The `/raw/` prefix displays the script content in the browser for inspection.
 
+## Script Types
+
+Some scripts require interactive input and should be downloaded before running:
+
+1. **Interactive scripts** (like `hysteria2_debian12.sh`):
+   ```bash
+   curl -fsSL https://your-domain.com/hysteria2_debian12.sh -o hysteria2_debian12.sh && sudo bash hysteria2_debian12.sh
+   ```
+   These scripts prompt for user input (like domain names).
+
+2. **Non-interactive scripts** (like `snell_debian12.sh` and `vlessvr_debian12.sh`):
+   ```bash
+   curl -fsSL https://your-domain.com/snell_debian12.sh | sudo bash
+   ```
+   These scripts run automatically without requiring user input.
+
 ## Local Setup
 
 1. Install dependencies (one-time setup):
@@ -74,16 +94,23 @@ There are multiple ways to access the scripts:
 
 3. Access the website at `http://localhost:3000`
 
-## Deployment to AWS
+## Server Setup
 
-### Prerequisites
-- AWS EC2 instance running Amazon Linux, Ubuntu, or Debian
-- Node.js installed on the server
-- Domain name pointing to your server (optional but recommended)
+### Required Dependencies
+
+For Ubuntu or Debian-based servers, install dependencies with:
+
+```bash
+# Update system packages first
+sudo apt update && sudo apt upgrade -y
+
+# Then install all dependencies in one command
+sudo apt install -y nodejs npm git build-essential nginx certbot python3-certbot-nginx && sudo npm install -g pm2
+```
 
 ### Deployment Steps
 
-1. Clone the repository on your AWS instance:
+1. Clone the repository on your server:
    ```bash
    git clone https://github.com/yourusername/vpn-scripts-hosting.git
    cd vpn-scripts-hosting
@@ -96,9 +123,6 @@ There are multiple ways to access the scripts:
 
 3. Start the server with PM2 (recommended for production):
    ```bash
-   # Install PM2 if not already installed
-   npm install -g pm2
-   
    # Start the server with PM2
    pm2 start server.js
    
@@ -109,10 +133,6 @@ There are multiple ways to access the scripts:
 
 4. Configure a reverse proxy with Nginx (optional but recommended):
    ```bash
-   # Install Nginx
-   sudo apt update
-   sudo apt install nginx
-   
    # Create Nginx configuration
    sudo nano /etc/nginx/sites-available/vpn-scripts
    ```
@@ -144,18 +164,24 @@ There are multiple ways to access the scripts:
 
 5. Set up SSL with Certbot (optional but recommended):
    ```bash
-   sudo apt install certbot python3-certbot-nginx
    sudo certbot --nginx -d your-domain.com
    ```
 
-## Usage
+### Firewall Configuration
 
-Once deployed, users can install VPN servers using:
+If you're accessing the server directly on port 3000 (without a reverse proxy):
 
 ```bash
-curl -fsSL https://your-domain.com/hysteria2_debian12.sh | sudo bash
-curl -fsSL https://your-domain.com/snell_debian12.sh | sudo bash
-curl -fsSL https://your-domain.com/vlessvr_debian12.sh | sudo bash
+# For AWS EC2 Security Groups: Add an inbound rule for TCP port 3000
+# For UFW (Ubuntu):
+sudo ufw allow 3000/tcp
+
+# For iptables:
+sudo iptables -A INPUT -p tcp --dport 3000 -j ACCEPT
 ```
 
-They can also visit the website at `https://your-domain.com` to see all available scripts.
+## Usage
+
+Once deployed, users can visit the website to see all available scripts and installation instructions.
+
+For the best experience, set up a proper domain name that points to your server.

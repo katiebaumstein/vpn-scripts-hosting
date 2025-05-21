@@ -43,6 +43,7 @@
             border-radius: 5px;
             font-family: monospace;
             overflow-x: auto;
+            white-space: pre-wrap;
         }
         .copy-button {
             background-color: #3498db;
@@ -60,6 +61,16 @@
             display: flex;
             gap: 10px;
         }
+        .tag {
+            display: inline-block;
+            background-color: #e74c3c;
+            color: white;
+            font-size: 0.7em;
+            padding: 2px 6px;
+            border-radius: 3px;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
         footer {
             margin-top: 50px;
             text-align: center;
@@ -70,18 +81,19 @@
 </head>
 <body>
     <h1>VPN Scripts Repository</h1>
-    <p>Welcome to the VPN installation scripts repository. Below you'll find various VPN scripts that can be installed with a single command.</p>
+    <p>Welcome to the VPN installation scripts repository. Below you'll find various VPN scripts that can be installed on Debian 12 systems.</p>
     
     <div class="script-container">
         <div class="script-item">
-            <h3 class="script-title">Hysteria2 (Debian 12)</h3>
+            <h3 class="script-title">Hysteria2 (Debian 12) <span class="tag">Interactive</span></h3>
             <p class="script-description">Installs and configures Hysteria2 VPN server on Debian 12 with ACME for SSL certificates.</p>
-            <div class="install-command" id="hysteria2-command">curl -fsSL https://example.com/hysteria2_debian12.sh | sudo bash</div>
+            <div class="install-command" id="hysteria2-command">curl -fsSL https://example.com/hysteria2_debian12.sh -o hysteria2_debian12.sh && sudo bash hysteria2_debian12.sh</div>
             <div class="button-container">
                 <button class="copy-button" onclick="copyToClipboard('hysteria2-command')">Copy Command</button>
                 <a href="/hysteria2_debian12.sh" download class="copy-button">Download Script</a>
                 <a href="/raw/hysteria2_debian12.sh" class="copy-button">View Script</a>
             </div>
+            <p><small><strong>Note:</strong> This script prompts for domain name input.</small></p>
         </div>
 
         <div class="script-item">
