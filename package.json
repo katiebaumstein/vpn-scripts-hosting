@@ -1,0 +1,21 @@
+{
+  "name": "vpn-scripts-hosting",
+  "version": "1.0.0",
+  "description": "A simple server for hosting VPN installation scripts",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "normalize": "node utils/normalize.js"
+  },
+  "keywords": [
+    "vpn",
+    "scripts",
+    "hosting"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
