@@ -50,8 +50,8 @@ app.get('/:scriptName', (req, res) => {
   
   // Check if the requested file exists
   if (fs.existsSync(scriptPath)) {
-    // For shell scripts, read, normalize, and serve with proper headers
-    if (scriptName.endsWith('.sh')) {
+    // For shell scripts and text files, read, normalize, and serve with proper headers
+    if (scriptName.endsWith('.sh') || scriptName.endsWith('.txt')) {
       fs.readFile(scriptPath, 'utf8', (err, data) => {
         if (err) {
           return res.status(500).send('Error reading script file');
@@ -95,7 +95,7 @@ app.get('/raw/:scriptName', (req, res) => {
   const scriptPath = path.join(__dirname, 'scripts', scriptName);
   
   if (fs.existsSync(scriptPath)) {
-    if (scriptName.endsWith('.sh')) {
+    if (scriptName.endsWith('.sh') || scriptName.endsWith('.txt')) {
       fs.readFile(scriptPath, 'utf8', (err, data) => {
         if (err) {
           return res.status(500).send('Error reading script file');
