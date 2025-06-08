@@ -1,0 +1,6 @@
+DOMAIN-KEYWORD,saasexch
+DOMAIN-KEYWORD,bnbstatic
+DOMAIN-KEYWORD,onetrust
+DOMAIN-KEYWORD,hyperunit
+DOMAIN-KEYWORD,hyperliquid
+DOMAIN-KEYWORD,binance
