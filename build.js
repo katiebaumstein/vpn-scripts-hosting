@@ -43,16 +43,20 @@ const files = fs.readdirSync(scriptsDir);
 files.forEach(file => {
   const filePath = path.join(scriptsDir, file);
   const distPath = path.join(distScriptsDir, file);
+  const distRootPath = path.join(distDir, file);
   
   if (file.endsWith('.sh') || file.endsWith('.txt')) {
     // Normalize text files
     const content = fs.readFileSync(filePath, 'utf8');
     const normalized = normalizeContent(content);
     fs.writeFileSync(distPath, normalized);
+    // Also copy to root for direct access
+    fs.writeFileSync(distRootPath, normalized);
     console.log(`Normalized: ${file}`);
   } else {
     // Copy other files as-is
     fs.copyFileSync(filePath, distPath);
+    fs.copyFileSync(filePath, distRootPath);
     console.log(`Copied: ${file}`);
   }
 });
