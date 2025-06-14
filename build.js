@@ -28,12 +28,16 @@ function normalizeContent(content) {
 // Create dist directory
 const distDir = path.join(__dirname, 'dist');
 const distScriptsDir = path.join(distDir, 'scripts');
+const distViewDir = path.join(distDir, 'view');
 
 if (!fs.existsSync(distDir)) {
   fs.mkdirSync(distDir);
 }
 if (!fs.existsSync(distScriptsDir)) {
   fs.mkdirSync(distScriptsDir);
+}
+if (!fs.existsSync(distViewDir)) {
+  fs.mkdirSync(distViewDir);
 }
 
 // Copy and normalize scripts
@@ -52,6 +56,20 @@ files.forEach(file => {
     fs.writeFileSync(distPath, normalized);
     // Also copy to root for direct access
     fs.writeFileSync(distRootPath, normalized);
+    
+    // Create .txt version in view directory for viewing .sh files
+    if (file.endsWith('.sh')) {
+      const viewPath = path.join(distViewDir, file + '.txt');
+      fs.writeFileSync(viewPath, normalized);
+      console.log(`Created view version: ${file}.txt`);
+    }
+    // Copy .txt files to view directory as-is for consistent URL pattern
+    else if (file.endsWith('.txt')) {
+      const viewPath = path.join(distViewDir, file);
+      fs.writeFileSync(viewPath, normalized);
+      console.log(`Created view version: ${file}`);
+    }
+    
     console.log(`Normalized: ${file}`);
   } else {
     // Copy other files as-is
