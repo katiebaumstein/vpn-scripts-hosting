@@ -89,6 +89,36 @@ app.get('/:scriptName', (req, res) => {
   }
 });
 
+// Handle /view/ requests for compatibility with static hosting URLs
+app.get('/view/:scriptName', (req, res) => {
+  let scriptName = req.params.scriptName;
+  
+  // Remove .txt extension if present (for .sh.txt files)
+  if (scriptName.endsWith('.sh.txt')) {
+    scriptName = scriptName.replace('.txt', '');
+  }
+  
+  const scriptPath = path.join(__dirname, 'scripts', scriptName);
+  
+  if (fs.existsSync(scriptPath)) {
+    fs.readFile(scriptPath, 'utf8', (err, data) => {
+      if (err) {
+        return res.status(500).send('Error reading script file');
+      }
+      
+      const normalizedContent = normalizeContent(data);
+      
+      // Always display as text for /view/ endpoint
+      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+      res.setHeader('Content-Disposition', `inline; filename="${scriptName}"`);
+      
+      res.send(normalizedContent);
+    });
+  } else {
+    res.status(404).send('File not found');
+  }
+});
+
 // View script content with syntax highlighting or raw display
 app.get('/raw/:scriptName', (req, res) => {
   const scriptName = req.params.scriptName;
