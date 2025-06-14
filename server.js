@@ -98,10 +98,13 @@ app.get('/raw/:scriptName', (req, res) => {
     if (scriptName.endsWith('.sh') || scriptName.endsWith('.txt')) {
       fs.readFile(scriptPath, 'utf8', (err, data) => {
         if (err) {
+          console.error('Error reading file:', err);
           return res.status(500).send('Error reading script file');
         }
         
+        console.log(`Reading ${scriptPath}, data length: ${data.length}`);
         const normalizedContent = normalizeContent(data);
+        console.log(`After normalization, content length: ${normalizedContent.length}`);
         
         // For /raw/ endpoint, display as text for viewing
         res.setHeader('Content-Type', 'text/plain; charset=utf-8');
